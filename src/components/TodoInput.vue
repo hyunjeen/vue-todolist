@@ -4,28 +4,42 @@
     <span class="addContainer" v-on:click="addTodo">
       <i class="fa-solid fa-plus"></i>
     </span>
+    <CustomModal v-if="showModal" @close="showModal = false">
+    <!--
+      you can use custom content here to overwrite
+      default content
+    -->
+    <h3 slot="header">경고 <i class="closeModalBtn fa-solid fa-xmark" @click="showModal = false"></i></h3>
+    <p slot="body">아무것도 입력하지 않으셨습니다</p>
+  </CustomModal>   
   </div>
 </template>
 
 <script>
+import CustomModal from './common/CustomModal.vue'
 export default {
   data() {
     return {
       newTodoItem: "",
+      showModal: false
     };
   },
   methods: {
     addTodo() {
       if (this.newTodoItem !== "") {
-        const obj = { checked: false, todoItem: this.newTodoItem };
-        localStorage.setItem(this.newTodoItem, JSON.stringify(obj));
-        this.clearinput();
+        this.$emit('addtodoitem', this.newTodoItem)
+        this.clearinput();       
+      }else {
+        this.showModal = !this.showModal
       }
     },
     clearinput() {
       this.newTodoItem = "";
     },
   },
+  components : {
+    CustomModal
+  }
 };
 </script>
 
@@ -58,4 +72,8 @@ input:focus {
 .addContainer:hover {
   opacity: 0.7;
 }
+
+.closeModalBtn {
+  color: #42b983
+  }
 </style>

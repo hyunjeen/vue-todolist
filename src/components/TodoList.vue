@@ -1,14 +1,14 @@
 <template>
   <div>
-    <ul>
+     <transition-group name="list" tag="ul">
       <li
-        v-for="(todoItem, index) in todoItems"
+        v-for="(todoItem, index) in propsdata"
         v-bind:key="todoItem.todoItem"
         class="shadow"
       >
         <i
           class="checkBtn fa-solid fa-check"
-          v-on:click="toggleComplete(todoItem)"
+          v-on:click="toggleComplete(todoItem, index)"
           v-bind:class="{ checkComplete: todoItem.checked }"
         ></i>
         <span v-bind:class="{ textCompleted: todoItem.checked }">{{
@@ -21,34 +21,20 @@
           <i class="fa-solid fa-trash-can"></i>
         </span>
       </li>
-    </ul>
+    </transition-group>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {
-      todoItems: [],
-    };
-  },
-  created() {
-    if (localStorage.length > 0) {
-      let keys = Object.keys(localStorage);
-      for (const key of keys) {
-        this.todoItems.push(JSON.parse(localStorage.getItem(key)));
-      }
-    }
-  },
+  props : ['propsdata'],
   methods: {
     removeTodo(item, index) {
-      localStorage.removeItem(item);
-      this.todoItems.splice(index, 1);
+      this.$emit('removeItem',item,index)
+     
     },
-    toggleComplete(todoitem) {
-      todoitem.checked = !todoitem.checked;
-      localStorage.removeItem(todoitem.todoItem)
-      localStorage.setItem(todoitem.todoItem, JSON.stringify(todoitem))
+    toggleComplete(todoitem ,index) {
+      this.$emit('toggle', todoitem, index)
     },
   },
 };
@@ -88,5 +74,13 @@ li {
 .removeBtn {
   margin-left: auto;
   color: #de4343;
+}
+
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>

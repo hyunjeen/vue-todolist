@@ -1,6 +1,6 @@
 <template>
   <div class="allRemoveContainer shadow">
-    <span class="allRemove" v-on:click="allRemove">
+    <span class="allRemove" v-on:click="clearremove">
       clear all
     </span>
   </div>
@@ -9,8 +9,8 @@
 <script>
 export default {
   methods: {
-    allRemove() {
-      localStorage.clear()
+    clearremove() {
+      this.$emit('clearremove')
     }
   }
 }
