@@ -10,7 +10,7 @@
 export default {
   methods: {
     clearremove() {
-      this.$emit('clearremove')
+      this.$store.commit('clearremove')
     }
   }
 }
